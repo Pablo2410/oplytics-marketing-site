@@ -1,15 +1,14 @@
 /**
  * TASK-02: Standardised MarketingHeader Component
  * Design: "Neon Operations" — sticky dark header with glow accents
- * Used identically on all 16 pages.
+ * Used identically on all pages.
  *
- * Layout: Logo | Solutions (dropdown) | Why Us | Contact | Sign In
- * No 'Pricing' nav item — pricing accessed via in-page CTAs only.
+ * Layout: Logo | Solutions (dropdown with core/hub delineation) | Why Us | Contact | Sign In
  */
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { services, liveServices, inDevServices, getServiceStatusColor } from '@/config/services';
+import { coreServices, hubServices, services, getServiceStatusColor } from '@/config/services';
 
 export default function MarketingHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -81,19 +80,19 @@ export default function MarketingHeader() {
               </button>
 
               {solutionsOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[420px] bg-[#0D1220] border border-[#1E2738] rounded-lg shadow-2xl overflow-hidden">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[440px] bg-[#0D1220] border border-[#1E2738] rounded-lg shadow-2xl overflow-hidden">
                   <div className="p-4">
-                    {/* Live Services */}
+                    {/* Core Services */}
                     <div className="mb-3">
-                      <span className="section-label text-[#22C55E] mb-2 block">Live</span>
+                      <span className="section-label text-[#8C34E9] mb-2 block">Core Platform</span>
                       <div className="space-y-1">
-                        {liveServices.map(service => (
+                        {coreServices.map(service => (
                           <Link
                             key={service.id}
                             href={`/solutions/${service.slug}`}
                             className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-[#1E2738]/60 transition-colors group"
                           >
-                            <div className="w-2 h-2 rounded-full" style={{ background: getServiceStatusColor('live') }} />
+                            <div className="w-2 h-2 rounded-full" style={{ background: getServiceStatusColor(service.status) }} />
                             <div>
                               <div className="text-sm font-semibold text-white group-hover:text-[#C084FC] transition-colors">
                                 {service.name}
@@ -107,17 +106,17 @@ export default function MarketingHeader() {
 
                     <div className="h-px bg-[#1E2738] my-3" />
 
-                    {/* In Development Services */}
+                    {/* Hub Services */}
                     <div>
-                      <span className="section-label text-[#8C34E9] mb-2 block">In Development</span>
-                      <div className="grid grid-cols-2 gap-1">
-                        {inDevServices.map(service => (
+                      <span className="section-label text-[#1DB8CE] mb-2 block">Specialist Hubs</span>
+                      <div className="space-y-1">
+                        {hubServices.map(service => (
                           <Link
                             key={service.id}
                             href={`/solutions/${service.slug}`}
                             className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-[#1E2738]/60 transition-colors group"
                           >
-                            <div className="w-1.5 h-1.5 rounded-full" style={{ background: getServiceStatusColor('in-development') }} />
+                            <div className="w-1.5 h-1.5 rounded-full" style={{ background: getServiceStatusColor(service.status) }} />
                             <span className="text-xs font-medium text-[#8890A0] group-hover:text-white transition-colors">
                               {service.name}
                             </span>
@@ -156,11 +155,33 @@ export default function MarketingHeader() {
       {mobileOpen && (
         <div className="lg:hidden bg-[#080C16]/98 backdrop-blur-md border-t border-[#1E2738]/60">
           <div className="px-4 py-6 space-y-4">
-            {/* Solutions Section */}
+            {/* Core Services */}
             <div>
-              <span className="section-label text-[#596475] mb-2 block">Solutions</span>
+              <span className="section-label text-[#8C34E9] mb-2 block">Core Platform</span>
               <div className="space-y-1 ml-2">
-                {services.map(service => (
+                {coreServices.map(service => (
+                  <Link
+                    key={service.id}
+                    href={`/solutions/${service.slug}`}
+                    className="flex items-center gap-2 py-2 text-sm text-[#8890A0] hover:text-white transition-colors"
+                  >
+                    <div
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: getServiceStatusColor(service.status) }}
+                    />
+                    {service.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="h-px bg-[#1E2738]" />
+
+            {/* Hub Services */}
+            <div>
+              <span className="section-label text-[#1DB8CE] mb-2 block">Specialist Hubs</span>
+              <div className="space-y-1 ml-2">
+                {hubServices.map(service => (
                   <Link
                     key={service.id}
                     href={`/solutions/${service.slug}`}

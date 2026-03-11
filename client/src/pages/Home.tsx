@@ -1,17 +1,17 @@
 /**
  * Home Page — Oplytics.digital Marketing Site
  * Design: "Neon Operations"
- * Sections: Hero, Services Grid, Why Oplytics, CTA
+ * Sections: Hero, Stats, Core Services, Hub Services (with divider), AI Callout, Why Oplytics, CTA
  */
 import MarketingLayout from '@/components/shared/MarketingLayout';
 import HeroSection from '@/components/shared/HeroSection';
 import ServiceCard from '@/components/shared/ServiceCard';
 import FeatureGrid from '@/components/shared/FeatureGrid';
-import { services } from '@/config/services';
+import { coreServices, hubServices, liveServices } from '@/config/services';
 import { Link } from 'wouter';
 import {
   ArrowRight, TrendingUp, Shield, BarChart3,
-  Target, Zap, Users
+  Target, Zap, Users, Sparkles
 } from 'lucide-react';
 
 const whyFeatures = [
@@ -28,7 +28,7 @@ const whyFeatures = [
   {
     icon: <Shield className="w-5 h-5" />,
     title: 'Built for Manufacturing',
-    description: 'Designed by operations professionals for operations professionals. Every feature solves a real shop-floor problem.',
+    description: 'Designed by operations professionals for operations professionals. Every feature solves a real manufacturing floor problem.',
   },
   {
     icon: <Target className="w-5 h-5" />,
@@ -53,7 +53,7 @@ export default function Home() {
       {/* Hero */}
       <HeroSection
         headline="Operational Excellence, Digitised."
-        subtext="The platform that connects your shop floor to your boardroom. Real-time OEE, digital SQDCP boards, safety management, and continuous improvement — all in one place."
+        subtext="The platform that connects your manufacturing floor to your boardroom. Real-time OEE, digital SQDCP boards, safety management, and continuous improvement — all in one place."
         status="live"
         backgroundImage="https://d2xsxph8kpxj0f.cloudfront.net/310419663031899852/TqfjMS5mXpLDBG5ze8gzfz/hero-main-8i2QPeXPF5Zif5HP36QHAA.webp"
         customCtas={[
@@ -67,7 +67,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { value: '8', label: 'Platform Services' },
-            { value: '2', label: 'Live & Deployed' },
+            { value: String(liveServices.length), label: 'Live & Deployed' },
             { value: '99.9%', label: 'Uptime SLA' },
             { value: '24/7', label: 'Support Available' },
           ].map((stat, i) => (
@@ -96,9 +96,62 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map(service => (
+          {/* Core Services — 5 services: 2 cols on md, 5 cols on xl */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {coreServices.map(service => (
               <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+
+          {/* Delineation Line */}
+          <div className="flex items-center gap-4 my-10">
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#1E2738] to-transparent" />
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#596475]">
+              Specialist Hubs
+            </span>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#1E2738] to-transparent" />
+          </div>
+
+          {/* Hub Services */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {hubServices.map(service => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Callout Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-y border-[#1E2738]/40">
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse at center, rgba(29,184,206,0.05) 0%, transparent 70%)',
+        }} />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 border border-[#1DB8CE]/20 bg-[#1DB8CE]/5">
+            <Sparkles className="w-4 h-4 text-[#1DB8CE]" />
+            <span className="text-xs font-bold tracking-wider uppercase text-[#1DB8CE]">
+              AI-Powered Platform
+            </span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Montserrat' }}>
+            Intelligence Built Into Every Service
+          </h2>
+          <p className="text-lg text-[#8890A0] max-w-2xl mx-auto mb-10">
+            From predictive maintenance alerts in OEE Manager to smart anomaly detection in SQDCP Hub, AI is woven into the fabric of the platform — not bolted on as an afterthought.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+            {[
+              { title: 'Predictive Analytics', desc: 'AI forecasts equipment failures, quality issues, and safety risks before they happen.' },
+              { title: 'Smart Automation', desc: 'Automatic loss classification, action prioritisation, and compliance gap detection.' },
+              { title: 'Natural Language Insights', desc: 'AI generates plain-English summaries of trends, anomalies, and recommended actions.' },
+            ].map((item, i) => (
+              <div key={i} className="p-5 rounded-lg border border-[#1DB8CE]/15 bg-[#0D1220]/80">
+                <div className="w-8 h-8 rounded-md bg-[#1DB8CE]/10 flex items-center justify-center mb-3">
+                  <Sparkles className="w-4 h-4 text-[#1DB8CE]" />
+                </div>
+                <h3 className="text-sm font-bold text-white mb-1" style={{ fontFamily: 'Montserrat' }}>{item.title}</h3>
+                <p className="text-xs text-[#8890A0] leading-relaxed">{item.desc}</p>
+              </div>
             ))}
           </div>
         </div>

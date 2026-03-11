@@ -39,7 +39,7 @@ const differentiators = [
   {
     icon: <Users className="w-5 h-5" />,
     title: 'Built by Operators, for Operators',
-    description: 'Our team has decades of manufacturing experience. We have stood on the shop floor, run the tier meetings, and felt the pain of paper-based systems.',
+    description: 'Our team has decades of manufacturing experience. We have stood on the manufacturing floor, run the tier meetings, and felt the pain of paper-based systems.',
   },
 ];
 

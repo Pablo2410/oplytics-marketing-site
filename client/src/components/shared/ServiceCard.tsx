@@ -1,9 +1,10 @@
 /**
  * TASK-05: ServiceCard Component
- * Design: "Neon Operations" — card with status badge, glow on hover
+ * Design: "Neon Operations" — card with status badge, AI badge, glow on hover
  *
  * Service name, tagline, icon/illustration.
  * Status badge (Live / In Development) driven by config.
+ * AI badge shown when service has aiFeatures.
  * Link to service solution page.
  * Consistent card sizing regardless of content length.
  */
@@ -11,6 +12,7 @@ import { Link } from 'wouter';
 import { ArrowRight } from 'lucide-react';
 import type { ServiceConfig } from '@/config/services';
 import { getServiceStatusLabel, getServiceStatusColor } from '@/config/services';
+import { AIBadgeInline } from './AIBadge';
 
 interface ServiceCardProps {
   service: ServiceConfig;
@@ -42,8 +44,8 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           style={{ background: service.accentColor }}
         />
 
-        {/* Status Badge */}
-        <div className="flex items-center gap-2 mb-4">
+        {/* Status + AI Badges */}
+        <div className="flex items-center gap-2 mb-4 flex-wrap">
           <span
             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase"
             style={{
@@ -55,6 +57,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
             {statusLabel}
           </span>
+          {service.aiFeatures.length > 0 && <AIBadgeInline />}
         </div>
 
         {/* Service Name */}
@@ -62,7 +65,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           {service.name}
         </h3>
 
-        {/* Tagline */}
+        {/* Description */}
         <p className="text-sm text-[#8890A0] leading-relaxed flex-1 mb-4">
           {service.description}
         </p>

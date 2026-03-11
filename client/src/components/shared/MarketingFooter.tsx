@@ -1,12 +1,12 @@
 /**
  * TASK-03: Standardised MarketingFooter Component
- * Design: "Neon Operations" — dark footer with grouped service links
- * Used identically on all 16 pages.
+ * Design: "Neon Operations" — dark footer with core/hub service grouping
+ * Used identically on all pages.
  *
- * Layout: Logo + copyright | Service links (grouped) | Legal links
+ * Layout: Logo + copyright | Core services | Hub services | Legal links
  */
 import { Link } from 'wouter';
-import { liveServices, inDevServices, getServiceStatusColor } from '@/config/services';
+import { coreServices, hubServices, getServiceStatusColor } from '@/config/services';
 
 export default function MarketingFooter() {
   const currentYear = new Date().getFullYear();
@@ -33,17 +33,17 @@ export default function MarketingFooter() {
             </p>
           </div>
 
-          {/* Column 2: Live Services */}
+          {/* Column 2: Core Platform */}
           <div>
-            <span className="section-label text-[#22C55E] mb-4 block">Live Services</span>
+            <span className="section-label text-[#8C34E9] mb-4 block">Core Platform</span>
             <ul className="space-y-3">
-              {liveServices.map(service => (
+              {coreServices.map(service => (
                 <li key={service.id}>
                   <Link
                     href={`/solutions/${service.slug}`}
                     className="flex items-center gap-2 text-sm text-[#8890A0] hover:text-white transition-colors"
                   >
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: getServiceStatusColor('live') }} />
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: getServiceStatusColor(service.status) }} />
                     {service.name}
                   </Link>
                 </li>
@@ -51,17 +51,17 @@ export default function MarketingFooter() {
             </ul>
           </div>
 
-          {/* Column 3: In Development Services */}
+          {/* Column 3: Specialist Hubs */}
           <div>
-            <span className="section-label text-[#8C34E9] mb-4 block">In Development</span>
+            <span className="section-label text-[#1DB8CE] mb-4 block">Specialist Hubs</span>
             <ul className="space-y-3">
-              {inDevServices.map(service => (
+              {hubServices.map(service => (
                 <li key={service.id}>
                   <Link
                     href={`/solutions/${service.slug}`}
                     className="flex items-center gap-2 text-sm text-[#8890A0] hover:text-white transition-colors"
                   >
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: getServiceStatusColor('in-development') }} />
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: getServiceStatusColor(service.status) }} />
                     {service.name}
                   </Link>
                 </li>

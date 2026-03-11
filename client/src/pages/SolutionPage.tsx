@@ -2,6 +2,14 @@
  * SolutionPage — Generic solution page driven by service config.
  * Used for all 8 service pages: /solutions/:slug
  * Design: "Neon Operations"
+ *
+ * Standardised sections:
+ *   1. Hero (status-driven CTAs)
+ *   2. Key Features (FeatureGrid)
+ *   3. AI Features (AIFeatureList)
+ *   4. Live Demo / See It In Action
+ *   5. Contact / Early Access
+ *   6. Cross-sell
  */
 import { useParams } from 'wouter';
 import MarketingLayout from '@/components/shared/MarketingLayout';
@@ -9,12 +17,13 @@ import HeroSection from '@/components/shared/HeroSection';
 import FeatureGrid from '@/components/shared/FeatureGrid';
 import ContactForm from '@/components/shared/ContactForm';
 import ServiceCard from '@/components/shared/ServiceCard';
+import { AIFeatureList } from '@/components/shared/AIBadge';
 import { getServiceBySlug, services } from '@/config/services';
 import { Link } from 'wouter';
 import {
   Gauge, LayoutGrid, ClipboardCheck, Shield, Target,
   Plug, CheckCircle, Award, BarChart3, Zap, TrendingUp,
-  Users, ArrowRight
+  Users, ArrowRight, Play, Monitor
 } from 'lucide-react';
 
 /** Service-specific feature data */
@@ -23,11 +32,11 @@ const serviceFeatures: Record<string, { icon: React.ReactNode; title: string; de
     { icon: <Gauge className="w-5 h-5" />, title: 'Real-Time OEE Tracking', description: 'Monitor availability, performance, and quality metrics as they happen across every machine and line.' },
     { icon: <BarChart3 className="w-5 h-5" />, title: 'Loss Categorisation', description: 'Automatically categorise downtime and speed losses. Pareto analysis identifies your biggest improvement opportunities.' },
     { icon: <TrendingUp className="w-5 h-5" />, title: 'Trend Analysis', description: 'Historical OEE trends by shift, line, product, and operator. Spot patterns before they become problems.' },
-    { icon: <Zap className="w-5 h-5" />, title: 'Automated Data Collection', description: 'Connect directly to PLCs and sensors via Oplytics Connect. Eliminate manual data entry errors.' },
+    { icon: <Zap className="w-5 h-5" />, title: 'Automated Data Collection', description: 'Connect directly to PLCs and sensors via SmartConnect. Eliminate manual data entry errors.' },
     { icon: <Users className="w-5 h-5" />, title: 'Shift Handover', description: 'Digital shift handover reports with OEE summaries, open actions, and key events from the previous shift.' },
     { icon: <Target className="w-5 h-5" />, title: 'Target Management', description: 'Set OEE targets by line, product, and shift. Visual indicators show performance against target in real time.' },
   ],
-  'sqdcp': [
+  'sqdcp-hub': [
     { icon: <LayoutGrid className="w-5 h-5" />, title: 'Digital Tier Boards', description: 'Replace whiteboards with real-time digital SQDCP boards. Accessible from any device, anywhere.' },
     { icon: <Shield className="w-5 h-5" />, title: 'Safety First', description: 'Safety metrics front and centre. Track incidents, near-misses, and safety observations daily.' },
     { icon: <CheckCircle className="w-5 h-5" />, title: 'Quality Tracking', description: 'First-pass yield, scrap rates, and customer complaints. Quality data integrated from your QMS.' },
@@ -53,7 +62,7 @@ const serviceFeatures: Record<string, { icon: React.ReactNode; title: string; de
     { icon: <TrendingUp className="w-5 h-5" />, title: 'Catchball Process', description: 'Facilitate the catchball process digitally. Align top-down objectives with bottom-up feedback.' },
     { icon: <BarChart3 className="w-5 h-5" />, title: 'Progress Reviews', description: 'Monthly and quarterly review cadence with automated status updates and bowling charts.' },
   ],
-  'connect': [
+  'smartconnect': [
     { icon: <Plug className="w-5 h-5" />, title: 'Machine Connectivity', description: 'Connect to PLCs, SCADA systems, and industrial sensors. Support for OPC-UA, MQTT, Modbus, and more.' },
     { icon: <Zap className="w-5 h-5" />, title: 'Zero-Code Configuration', description: 'Visual configuration interface. Map machine signals to Oplytics data points without writing code.' },
     { icon: <BarChart3 className="w-5 h-5" />, title: 'Data Transformation', description: 'Transform raw machine data into meaningful metrics. Built-in calculation engine for OEE, cycle times, and more.' },
@@ -98,7 +107,7 @@ export default function SolutionPage() {
 
   return (
     <MarketingLayout>
-      {/* Hero */}
+      {/* 1. Hero */}
       <HeroSection
         headline={service.name}
         subtext={service.description}
@@ -106,7 +115,7 @@ export default function SolutionPage() {
         backgroundImage={service.heroImage}
       />
 
-      {/* Features */}
+      {/* 2. Key Features */}
       {features.length > 0 && (
         <FeatureGrid
           items={features}
@@ -116,7 +125,81 @@ export default function SolutionPage() {
         />
       )}
 
-      {/* Contact / Early Access Section */}
+      {/* 3. AI Features */}
+      {service.aiFeatures.length > 0 && (
+        <AIFeatureList features={service.aiFeatures} />
+      )}
+
+      {/* 4. Live Demo / See It In Action */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 border-y border-[#1E2738]/40">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="section-label text-[#8C34E9] mb-3 block">See It In Action</span>
+            <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: 'Montserrat' }}>
+              {service.name} Demo
+            </h2>
+            <p className="text-[#8890A0] max-w-xl mx-auto">
+              {service.status === 'live'
+                ? `Experience ${service.name} with a live interactive walkthrough. See how it works in a real manufacturing environment.`
+                : `Preview the ${service.name} experience. Full interactive demos will be available when the service launches.`}
+            </p>
+          </div>
+
+          {/* Demo Placeholder */}
+          <div className="relative rounded-lg border border-[#1E2738] bg-[#0D1220] overflow-hidden">
+            {/* Mock browser chrome */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[#1E2738] bg-[#080C16]">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-[#EF4444]/60" />
+                <div className="w-3 h-3 rounded-full bg-[#F59E0B]/60" />
+                <div className="w-3 h-3 rounded-full bg-[#22C55E]/60" />
+              </div>
+              <div className="flex-1 mx-4">
+                <div className="bg-[#1E2738] rounded-md px-3 py-1.5 text-xs text-[#596475] font-mono">
+                  {service.subdomain || `${service.slug}.oplytics.digital`}
+                </div>
+              </div>
+            </div>
+
+            {/* Demo content area */}
+            <div className="aspect-video flex flex-col items-center justify-center p-8 text-center relative">
+              {/* Subtle grid pattern */}
+              <div className="absolute inset-0 opacity-5" style={{
+                backgroundImage: 'linear-gradient(#8C34E9 1px, transparent 1px), linear-gradient(90deg, #8C34E9 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+              }} />
+
+              <div className="relative z-10">
+                <div className="w-16 h-16 rounded-full bg-[#8C34E9]/10 flex items-center justify-center mx-auto mb-6 border border-[#8C34E9]/20">
+                  {service.status === 'live' ? (
+                    <Play className="w-7 h-7 text-[#C084FC] ml-1" />
+                  ) : (
+                    <Monitor className="w-7 h-7 text-[#C084FC]" />
+                  )}
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2" style={{ fontFamily: 'Montserrat' }}>
+                  {service.status === 'live' ? 'Interactive Demo' : 'Preview Coming Soon'}
+                </h3>
+                <p className="text-sm text-[#8890A0] max-w-md mx-auto mb-6">
+                  {service.status === 'live'
+                    ? `Click below to launch a guided walkthrough of ${service.name} with sample manufacturing data.`
+                    : `We are building the ${service.name} demo experience. Register your interest to be notified when it is ready.`}
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-md text-sm font-bold text-white tracking-wider hover:opacity-90 glow-purple"
+                  style={{ background: 'linear-gradient(135deg, #8C34E9 0%, #5B1FA6 100%)' }}
+                >
+                  {service.status === 'live' ? 'Launch Demo' : 'Request Preview'}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Contact / Early Access Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ background: '#080C16' }}>
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
@@ -140,7 +223,7 @@ export default function SolutionPage() {
         </div>
       </section>
 
-      {/* Cross-sell */}
+      {/* 6. Cross-sell */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
