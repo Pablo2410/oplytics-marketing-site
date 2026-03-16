@@ -41,11 +41,26 @@ export default function ContactForm({ context, compact = false }: ContactFormPro
     if (!validate()) return;
 
     setSubmitting(true);
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setSubmitting(false);
-    setSubmitted(true);
-    toast.success('Message sent! We\'ll be in touch shortly.');
+    try {
+      const res = await fetch('https://portal.oplytics.digital/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          company: formData.company.trim() || undefined,
+          message: formData.message.trim(),
+          source: context || 'marketing-site',
+        }),
+      });
+      if (!res.ok) throw new Error('Submission failed');
+      setSubmitted(true);
+      toast.success('Message sent! We\'ll be in touch shortly.');
+    } catch {
+      toast.error('Something went wrong. Please try again or email us directly.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {

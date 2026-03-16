@@ -1,31 +1,39 @@
 /**
- * Pricing Page — TASK-11: Canonical /pricing page (single source of truth)
+ * Pricing Page — Contact-first approach
  * Design: "Neon Operations"
  *
  * Sections:
- *   1. Header with monthly/annual toggle
- *   2. Pricing tiers (live services only)
+ *   1. Header — no pricing figures, tasteful "Contact us" messaging
+ *   2. Plan overview cards — feature tiers without prices
  *   3. Coming Soon (in-development services)
- *   4. ROI / Payback Calculator (tiered by enterprise size)
+ *   4. ROI / Payback Calculator (kept — uses benefit estimates, not prices)
  *   5. FAQ
  *   6. Contact form
  */
 import { useState } from 'react';
 import MarketingLayout from '@/components/shared/MarketingLayout';
-import PricingTier, { type PricingPlan } from '@/components/shared/PricingTier';
 import ContactForm from '@/components/shared/ContactForm';
 import SEOHead from '@/components/shared/SEOHead';
 import AnimateOnScroll, { StaggerContainer } from '@/components/shared/AnimateOnScroll';
 import { inDevServices } from '@/config/services';
 import { Link } from 'wouter';
-import { Calculator, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import { Calculator, ChevronDown, ChevronUp, HelpCircle, Check, ArrowRight, MessageSquare } from 'lucide-react';
 
-/* ── Pricing Plans ── */
-const monthlyPlans: PricingPlan[] = [
+/* ── Plan Tiers (no prices) ── */
+interface PlanTier {
+  name: string;
+  tagline: string;
+  description: string;
+  features: string[];
+  highlighted?: boolean;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+const plans: PlanTier[] = [
   {
     name: 'Starter',
-    price: '£299',
-    period: '/month',
+    tagline: 'Get started with digital operations management',
     description: 'Perfect for single-site operations getting started with digital management.',
     features: [
       'OEE Manager — 1 production line',
@@ -37,13 +45,12 @@ const monthlyPlans: PricingPlan[] = [
       'Standard reporting',
       'Mobile app access',
     ],
-    ctaLabel: 'Get Started',
+    ctaLabel: 'Get a Quote',
     ctaHref: '/contact',
   },
   {
     name: 'Professional',
-    price: '£799',
-    period: '/month',
+    tagline: 'Full visibility across multiple lines and teams',
     description: 'For growing operations that need full visibility across multiple lines and teams.',
     features: [
       'OEE Manager — up to 10 lines',
@@ -59,13 +66,12 @@ const monthlyPlans: PricingPlan[] = [
       'Shift handover reports',
     ],
     highlighted: true,
-    ctaLabel: 'Get Started',
+    ctaLabel: 'Get a Quote',
     ctaHref: '/contact',
   },
   {
     name: 'Enterprise',
-    price: 'Custom',
-    period: '',
+    tagline: 'Multi-site, enterprise-grade deployment',
     description: 'For multi-site organisations requiring enterprise-grade features and dedicated support.',
     features: [
       'All Professional features',
@@ -82,13 +88,6 @@ const monthlyPlans: PricingPlan[] = [
     ctaHref: '/contact',
   },
 ];
-
-const annualPlans: PricingPlan[] = monthlyPlans.map(plan => ({
-  ...plan,
-  price: plan.price === 'Custom' ? 'Custom' : `£${Math.round(parseInt(plan.price.replace('£', '')) * 10)}`,
-  period: plan.price === 'Custom' ? '' : '/year',
-  description: plan.description + (plan.price !== 'Custom' ? ' Save ~17% with annual billing.' : ''),
-}));
 
 /* ── ROI Calculator ── */
 type CompanySize = 'small' | 'medium' | 'large';
@@ -107,37 +106,23 @@ const sizePresets: Record<CompanySize, { label: string; headcount: number; lines
 };
 
 function calculateROI(inputs: ROIInputs) {
-  const { headcount, lines, sites } = inputs;
-  // Conservative estimates based on industry research
-  const avgHourlyLabourCost = 22; // £/hr
-  const hoursPerWeek = 40;
+  const { lines, sites } = inputs;
+  const avgHourlyLabourCost = 22;
   const weeksPerYear = 48;
 
-  // Time savings: ~2 hrs/week per line from automated data collection
   const timeSavingsPerLine = 2 * avgHourlyLabourCost * weeksPerYear;
   const totalTimeSavings = timeSavingsPerLine * lines;
 
-  // OEE improvement: conservative 3% improvement = significant throughput gain
-  const avgRevenuePerLine = 500000; // £/year
+  const avgRevenuePerLine = 500000;
   const oeeImprovement = 0.03;
   const throughputGain = avgRevenuePerLine * oeeImprovement * lines;
 
-  // Meeting efficiency: 15 min saved per tier meeting, 5 meetings/week per site
   const meetingSavings = (15 / 60) * avgHourlyLabourCost * 5 * 5 * weeksPerYear * sites;
 
   const totalAnnualBenefit = totalTimeSavings + throughputGain + meetingSavings;
 
-  // Estimated cost
-  const estimatedAnnualCost = inputs.size === 'small' ? 3588 : inputs.size === 'medium' ? 9588 : 24000;
-
-  const roi = ((totalAnnualBenefit - estimatedAnnualCost) / estimatedAnnualCost) * 100;
-  const paybackMonths = Math.ceil((estimatedAnnualCost / totalAnnualBenefit) * 12);
-
   return {
     totalAnnualBenefit: Math.round(totalAnnualBenefit),
-    estimatedAnnualCost,
-    roi: Math.round(roi),
-    paybackMonths: Math.min(paybackMonths, 12),
     timeSavings: Math.round(totalTimeSavings),
     throughputGain: Math.round(throughputGain),
     meetingSavings: Math.round(meetingSavings),
@@ -152,7 +137,7 @@ const faqs = [
   },
   {
     q: 'What happens when in-development services launch?',
-    a: 'When services like SmartConnect, Quality Manager, Safety Manager, and Certification Manager go live, they will be added to the pricing tiers. Existing customers will receive early access and preferential pricing.',
+    a: 'When services like OplyticsConnect, Quality Manager, Safety Manager, and Certification Manager go live, they will be added to the platform. Existing customers will receive early access and preferential pricing.',
   },
   {
     q: 'Is there a free trial?',
@@ -177,9 +162,6 @@ const faqs = [
 ];
 
 export default function Pricing() {
-  const [annual, setAnnual] = useState(false);
-  const plans = annual ? annualPlans : monthlyPlans;
-
   // ROI calculator state
   const [roiSize, setRoiSize] = useState<CompanySize>('medium');
   const [roiInputs, setRoiInputs] = useState<ROIInputs>({
@@ -200,7 +182,7 @@ export default function Pricing() {
     <MarketingLayout>
       <SEOHead
         title="Pricing"
-        description="Simple, transparent pricing for Oplytics.digital. Start small, scale fast with plans for every manufacturing operation."
+        description="Flexible pricing plans for Oplytics.digital. Contact us for a tailored quote for your manufacturing operation."
       />
 
       {/* ── 1. Header ── */}
@@ -208,39 +190,72 @@ export default function Pricing() {
         <div className="max-w-3xl mx-auto">
           <span className="section-label text-[#8C34E9] mb-3 block">Pricing</span>
           <h1 className="text-4xl sm:text-5xl font-black text-white mb-4" style={{ fontFamily: 'Montserrat' }}>
-            Simple, Transparent Pricing
+            Tailored to Your Operation
           </h1>
-          <p className="text-lg text-[#8890A0] mb-8">
-            Start small, scale fast. All plans include access to live services with no hidden fees.
+          <p className="text-lg text-[#8890A0] mb-6">
+            Every manufacturing operation is different. We work with you to build a package that fits your scale, goals, and budget.
           </p>
-
-          <div className="inline-flex items-center gap-3 p-1 rounded-lg bg-[#0D1220] border border-[#1E2738]">
-            <button
-              onClick={() => setAnnual(false)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                !annual ? 'bg-[#8C34E9] text-white' : 'text-[#8890A0] hover:text-white'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setAnnual(true)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                annual ? 'bg-[#8C34E9] text-white' : 'text-[#8890A0] hover:text-white'
-              }`}
-            >
-              Annual
-              <span className="ml-1.5 text-xs text-[#22C55E]">Save 17%</span>
-            </button>
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[#8C34E9]/30 bg-[#8C34E9]/5">
+            <MessageSquare className="w-4 h-4 text-[#8C34E9]" />
+            <span className="text-sm text-[#8890A0]">
+              Contact us for a personalised quote
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── 2. Pricing Grid ── */}
+      {/* ── 2. Plan Overview Grid (no prices) ── */}
       <section className="pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8">
         <StaggerContainer className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8" variant="slide-up" staggerDelay={0.1}>
           {plans.map((plan, i) => (
-            <PricingTier key={i} plan={plan} />
+            <div
+              key={i}
+              className={`relative flex flex-col p-8 rounded-lg border transition-all duration-300 ${
+                plan.highlighted
+                  ? 'border-[#8C34E9]/50 bg-[#0D1220] glow-purple-strong'
+                  : 'border-[#1E2738] bg-[#0D1220] hover:border-[#1E2738]/80'
+              }`}
+            >
+              {plan.highlighted && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="px-4 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-white bg-[#8C34E9]">
+                    Most Popular
+                  </span>
+                </div>
+              )}
+              <h3 className="text-lg font-bold text-white mb-2" style={{ fontFamily: 'Montserrat' }}>
+                {plan.name}
+              </h3>
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#8C34E9] mb-3">
+                {plan.tagline}
+              </p>
+              <p className="text-sm text-[#8890A0] mb-6 leading-relaxed">{plan.description}</p>
+              <div className="h-px bg-[#1E2738] mb-6" />
+              <ul className="space-y-3 flex-1 mb-8">
+                {plan.features.map((feature, j) => (
+                  <li key={j} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-[#22C55E] mt-0.5 shrink-0" />
+                    <span className="text-sm text-[#8890A0]">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={plan.ctaHref}
+                className={`inline-flex items-center justify-center gap-2 w-full px-6 py-3 rounded-md text-sm font-bold tracking-wider transition-all duration-200 ${
+                  plan.highlighted
+                    ? 'text-white hover:opacity-90'
+                    : 'text-[#8890A0] border border-[#1E2738] hover:border-[#8C34E9]/40 hover:text-white bg-[#0D1220]'
+                }`}
+                style={
+                  plan.highlighted
+                    ? { background: 'linear-gradient(135deg, #8C34E9 0%, #5B1FA6 100%)' }
+                    : undefined
+                }
+              >
+                {plan.ctaLabel}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           ))}
         </StaggerContainer>
       </section>
@@ -267,8 +282,8 @@ export default function Pricing() {
                 >
                   <div className="w-2 h-2 rounded-full bg-[#8C34E9]" />
                   <div>
-                    <div className="text-sm font-semibold text-white">{service.name}</div>
-                    <div className="text-xs text-[#596475]">Coming Soon</div>
+                    <div className="text-sm font-medium text-white">{service.name}</div>
+                    <div className="text-[10px] text-[#596475] uppercase tracking-wider">Coming Soon</div>
                   </div>
                 </Link>
               ))}
@@ -277,19 +292,19 @@ export default function Pricing() {
         </section>
       )}
 
-      {/* ── 4. ROI Calculator ── */}
+      {/* ── 4. ROI Calculator (benefit estimates only — no cost/price figures) ── */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-[#1E2738]/40" style={{ background: 'linear-gradient(180deg, #080C16 0%, #0D1220 100%)' }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4">
               <Calculator className="w-5 h-5 text-[#1DB8CE]" />
-              <span className="section-label text-[#1DB8CE]">ROI Calculator</span>
+              <span className="section-label text-[#1DB8CE]">Benefit Estimator</span>
             </div>
             <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: 'Montserrat' }}>
-              Estimate Your Return on Investment
+              Estimate Your Potential Savings
             </h2>
             <p className="text-[#8890A0] max-w-lg mx-auto">
-              Select your organisation size to see estimated annual benefits, payback period, and ROI.
+              Select your organisation size to see estimated annual benefits from digitising your operations.
             </p>
           </div>
 
@@ -300,7 +315,6 @@ export default function Pricing() {
                 Your Organisation
               </h3>
 
-              {/* Size selector */}
               <div className="space-y-3 mb-8">
                 {(Object.keys(sizePresets) as CompanySize[]).map(size => (
                   <button
@@ -320,7 +334,6 @@ export default function Pricing() {
                 ))}
               </div>
 
-              {/* Editable inputs */}
               <div className="space-y-4">
                 <div>
                   <label className="text-xs text-[#596475] uppercase tracking-wider block mb-1.5">Headcount</label>
@@ -356,20 +369,18 @@ export default function Pricing() {
 
             {/* Results */}
             <div className="space-y-4">
-              {/* Main ROI card */}
               <div className="p-6 rounded-lg border border-[#22C55E]/30 bg-[#22C55E]/5">
-                <div className="text-xs text-[#22C55E] uppercase tracking-widest mb-2 font-semibold">Estimated Annual ROI</div>
+                <div className="text-xs text-[#22C55E] uppercase tracking-widest mb-2 font-semibold">Estimated Annual Benefit</div>
                 <div className="text-5xl font-black text-[#22C55E] mb-1" style={{ fontFamily: 'Montserrat' }}>
-                  {roiResults.roi}%
+                  £{roiResults.totalAnnualBenefit.toLocaleString()}
                 </div>
                 <div className="text-sm text-[#8890A0]">
-                  Payback in <span className="text-white font-semibold">{roiResults.paybackMonths} month{roiResults.paybackMonths !== 1 ? 's' : ''}</span>
+                  Potential annual savings from digitised operations
                 </div>
               </div>
 
-              {/* Benefit breakdown */}
               <div className="p-6 rounded-lg border border-[#1E2738] bg-[#0D1220]">
-                <div className="text-xs text-[#596475] uppercase tracking-widest mb-4 font-semibold">Annual Benefit Breakdown</div>
+                <div className="text-xs text-[#596475] uppercase tracking-widest mb-4 font-semibold">Benefit Breakdown</div>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-[#8890A0]">Time savings (automated data collection)</span>
@@ -387,11 +398,20 @@ export default function Pricing() {
                     <span className="text-sm font-semibold text-white">Total Annual Benefit</span>
                     <span className="text-lg font-bold text-[#1DB8CE]">£{roiResults.totalAnnualBenefit.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-[#596475]">Estimated annual cost</span>
-                    <span className="text-sm text-[#596475]">£{roiResults.estimatedAnnualCost.toLocaleString()}</span>
-                  </div>
                 </div>
+              </div>
+
+              <div className="p-4 rounded-lg border border-[#8C34E9]/20 bg-[#8C34E9]/5 text-center">
+                <p className="text-sm text-[#8890A0] mb-3">
+                  Want to see how these savings compare to your investment?
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-md text-sm font-bold text-white transition-all hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg, #8C34E9 0%, #5B1FA6 100%)' }}
+                >
+                  Get a Personalised ROI Analysis <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
 
               <p className="text-xs text-[#596475] leading-relaxed">
@@ -449,10 +469,10 @@ export default function Pricing() {
           <div className="text-center mb-10">
             <span className="section-label text-[#8C34E9] mb-3 block">Get In Touch</span>
             <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: 'Montserrat' }}>
-              Need a Custom Quote?
+              Let's Build Your Package
             </h2>
             <p className="text-[#8890A0]">
-              Tell us about your requirements and we will put together a tailored proposal.
+              Tell us about your operation and we will put together a tailored proposal with transparent pricing.
             </p>
           </div>
           <div className="p-8 rounded-lg border border-[#1E2738] bg-[#0D1220]">
