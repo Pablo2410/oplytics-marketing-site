@@ -5,7 +5,7 @@
  * and the standardised service page template sections.
  *
  * ARCHITECTURE:
- *   - Core services: Policy Deployment, SQDCP Hub, OEE Manager, SmartConnect, Action Manager
+ *   - Core services: Policy Deployment, SQDCP Hub, OEE Manager, OplyticsConnect, Action Manager
  *   - Hub services: Quality Manager, Safety Manager, Certification Manager
  *   - `category`: 'core' | 'hub'
  *   - `aiFeatures`: AI capabilities built into each service
@@ -100,7 +100,7 @@ export const services: ServiceConfig[] = [
     tagline: 'Daily management boards, digitised',
     description: 'Digital SQDCP boards that drive daily accountability. Safety, Quality, Delivery, Cost, and People metrics at a glance for every team.',
     status: 'live',
-    slug: 'sqdcp-hub',
+    slug: 'sqdcp',
     icon: 'LayoutGrid',
     accentColor: '#1DB8CE',
     category: 'core',
@@ -159,11 +159,11 @@ export const services: ServiceConfig[] = [
   },
   {
     id: 'smartconnect',
-    name: 'SmartConnect',
+    name: 'OplyticsConnect',
     tagline: 'Integrate machines, sensors, and systems',
     description: 'Industrial IoT connectivity layer. Connect PLCs, sensors, and legacy systems to the Oplytics platform with zero-code configuration.',
     status: 'in-development',
-    slug: 'smartconnect',
+    slug: 'connect',
     icon: 'Plug',
     accentColor: '#1DB8CE',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663031899852/TqfjMS5mXpLDBG5ze8gzfz/hero-connect-BLrEbXt4nBnvZdECMPpzLm.webp',
@@ -193,7 +193,7 @@ export const services: ServiceConfig[] = [
     name: 'Action Manager',
     tagline: 'Track every action to closure',
     description: 'Capture, assign, and track corrective and preventive actions from any source. Ensure nothing falls through the cracks.',
-    status: 'live',
+    status: 'in-development',
     slug: 'action-manager',
     icon: 'ClipboardCheck',
     accentColor: '#22C55E',

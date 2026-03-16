@@ -73,12 +73,12 @@ const resources: Resource[] = [
   },
   {
     id: '5',
-    title: 'SmartConnect Launch: IoT Integration for Real-Time Data',
-    excerpt: 'Introducing SmartConnect — our new IoT integration layer that connects PLCs, SCADA systems, and sensors directly to the Oplytics platform for automated, real-time data collection.',
+    title: 'OplyticsConnect Launch: IoT Integration for Real-Time Data',
+    excerpt: 'Introducing OplyticsConnect — our new IoT integration layer that connects PLCs, SCADA systems, and sensors directly to the Oplytics platform for automated, real-time data collection.',
     category: 'update',
     readTime: '4 min',
     date: '2025-12-15',
-    slug: 'smartconnect-launch',
+    slug: 'oplyticsconnect-launch',
   },
   {
     id: '6',
@@ -164,10 +164,6 @@ export default function Resources() {
                     <Link
                       href={`/resources/${article.slug}`}
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8C34E9] hover:text-[#C084FC] transition-colors"
-                      onClick={(e: React.MouseEvent) => {
-                        e.preventDefault();
-                        import('sonner').then(({ toast }) => toast.info('Full article coming soon'));
-                      }}
                     >
                       Read Article
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -233,10 +229,6 @@ export default function Resources() {
                     <Link
                       href={`/resources/${article.slug}`}
                       className="text-xs font-bold text-[#8C34E9] hover:text-[#C084FC] transition-colors flex items-center gap-1"
-                      onClick={(e: React.MouseEvent) => {
-                        e.preventDefault();
-                        import('sonner').then(({ toast }) => toast.info('Full article coming soon'));
-                      }}
                     >
                       Read
                       <ArrowRight className="w-3 h-3" />
