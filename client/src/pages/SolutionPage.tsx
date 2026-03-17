@@ -1,5 +1,5 @@
 /**
- * SolutionPage — Standardised service page template (TASK-16)
+ * SolutionPage — Standardised service page template (TASK-16 + BATCH-4)
  * All 8 service pages use this template: /solutions/:slug
  *
  * Sections (in order):
@@ -10,8 +10,9 @@
  *   5. How It Works — Step-by-step process (3-4 phases)
  *   6. Results — Verified metrics, research-backed stats, or neutral language
  *   7. AI Features — Built-in AI capabilities
- *   8. Cross-Sell — Related services
- *   9. CTA — Simple contact CTA
+ *   8. Custom Sections — Service-specific sections (IoT, Protocols, Tier Meetings)
+ *   9. Cross-Sell — Related services
+ *  10. CTA — Inline contact form
  *
  * CLAIMS POLICY: Results section enforces tier labels.
  * No pricing on service pages — CTAs link to /pricing.
@@ -22,9 +23,13 @@ import MarketingLayout from '@/components/shared/MarketingLayout';
 import HeroSection from '@/components/shared/HeroSection';
 import FeatureGrid from '@/components/shared/FeatureGrid';
 import ServiceCard from '@/components/shared/ServiceCard';
+import ContactForm from '@/components/shared/ContactForm';
 import SEOHead from '@/components/shared/SEOHead';
 import AnimateOnScroll, { StaggerContainer } from '@/components/shared/AnimateOnScroll';
 import { AIFeatureList } from '@/components/shared/AIBadge';
+import IoTShowcaseSection from '@/components/shared/IoTShowcaseSection';
+import ConnectRolesProtocolsSection from '@/components/shared/ConnectRolesProtocolsSection';
+import TierMeetingSection from '@/components/shared/TierMeetingSection';
 import { getServiceBySlug, getCrossSellServices, getClaimTierLabel } from '@/config/services';
 import { demoComponents } from '@/components/demos';
 import { Link } from 'wouter';
@@ -159,7 +164,7 @@ export default function SolutionPage() {
         />
       )}
 
-      {/* ── 4. DEMO (moved above How It Works) ── */}
+      {/* ── 4. DEMO (above How It Works) ── */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 border-y border-[#1E2738]/40">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
@@ -325,7 +330,7 @@ export default function SolutionPage() {
         </section>
       )}
 
-      {/* ── 5. RESULTS ── */}
+      {/* ── 6. RESULTS ── */}
       {service.results.length > 0 && (
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
@@ -373,14 +378,22 @@ export default function SolutionPage() {
         </section>
       )}
 
-      {/* ── 6. AI FEATURES ── */}
+      {/* ── 7. AI FEATURES ── */}
       {service.aiFeatures.length > 0 && (
         <AIFeatureList features={service.aiFeatures} />
       )}
 
+      {/* ── 8. CUSTOM SECTIONS ── */}
+      {/* Task 6: OEE Manager — IoT Device Showcase */}
+      {service.slug === 'oee-manager' && <IoTShowcaseSection />}
 
+      {/* Task 7: OplyticsConnect — Value Proposals by Role & Supported Protocols */}
+      {service.slug === 'smartconnect' && <ConnectRolesProtocolsSection />}
 
-      {/* ── 8. CROSS-SELL ── */}
+      {/* Task 8: SQDCP Dashboard — Tier Meeting Workflow */}
+      {service.slug === 'sqdcp-hub' && <TierMeetingSection />}
+
+      {/* ── 9. CROSS-SELL ── */}
       {crossSellServices.length > 0 && (
         <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
@@ -399,23 +412,43 @@ export default function SolutionPage() {
         </section>
       )}
 
-      {/* ── 9. CTA ── */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8" style={{ background: '#080C16' }}>
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Montserrat' }}>
-            Ready to see it in action?
-          </h2>
-          <p className="text-[#8890A0] mb-8">
-            Get in touch with our team.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-md text-sm font-bold text-white tracking-wider hover:opacity-90 glow-purple"
-            style={{ background: 'linear-gradient(135deg, #8C34E9 0%, #5B1FA6 100%)' }}
-          >
-            Contact Us
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+      {/* ── 10. CTA with Inline Contact Form (BATCH-4 TASK-5) ── */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-[#1E2738]/40" style={{ background: '#080C16' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            {/* Left — Copy */}
+            <div className="lg:pt-4">
+              <AnimateOnScroll variant="slide-up">
+                <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Montserrat' }}>
+                  Ready to see it in action?
+                </h2>
+                <p className="text-[#8890A0] mb-6 leading-relaxed">
+                  Get in touch with our team. Tell us about your operation and we will show you how {service.name} can help.
+                </p>
+                <div className="space-y-3 text-sm text-[#596475]">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-[#22C55E]" />
+                    <span>Personalised demo with your data</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-[#22C55E]" />
+                    <span>No commitment required</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-[#22C55E]" />
+                    <span>Response within 24 hours</span>
+                  </div>
+                </div>
+              </AnimateOnScroll>
+            </div>
+
+            {/* Right — Inline Contact Form */}
+            <AnimateOnScroll variant="slide-up">
+              <div className="p-6 rounded-lg border border-[#1E2738] bg-[#0D1220]">
+                <ContactForm context={service.name} compact />
+              </div>
+            </AnimateOnScroll>
+          </div>
         </div>
       </section>
     </MarketingLayout>

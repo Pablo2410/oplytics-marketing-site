@@ -1,12 +1,15 @@
 /**
- * Home Page — TASK-10/22/25/26/27
+ * Home Page — TASK-10/22/25/26/27 + BATCH-4 (Tasks 1-4)
  * Design: "Neon Operations"
- * Sections: Hero, Stats, Core Services, Hub Services, AI Callout, Social Proof, Why Oplytics, CTA
- * Enhanced with: AnimateOnScroll, SEOHead, mobile responsive audit, accessibility
+ * Sections: Hero, Stats, Problem, Core Services (animated), Hub Services (animated),
+ *           Value Case, Scalability, AI Callout, Why Oplytics, Personas, CTA
  */
 import MarketingLayout from '@/components/shared/MarketingLayout';
 import HeroSection from '@/components/shared/HeroSection';
-import ServiceCard from '@/components/shared/ServiceCard';
+import AnimatedServiceCard from '@/components/shared/AnimatedServiceCard';
+import ProblemSection from '@/components/shared/ProblemSection';
+import ValueCaseSection from '@/components/shared/ValueCaseSection';
+import ScalabilitySection from '@/components/shared/ScalabilitySection';
 import FeatureGrid from '@/components/shared/FeatureGrid';
 import PersonaSection from '@/components/shared/PersonaSection';
 import SEOHead from '@/components/shared/SEOHead';
@@ -101,7 +104,10 @@ export default function Home() {
         </StaggerContainer>
       </section>
 
-      {/* Solutions Grid */}
+      {/* BATCH-4 TASK-1: The Problem */}
+      <ProblemSection />
+
+      {/* Solutions Grid — BATCH-4 TASK-4: Animated Service Cards */}
       <section id="solutions" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8" role="region" aria-label="Platform solutions">
         <div className="max-w-7xl mx-auto">
           <AnimateOnScroll variant="slide-up" className="text-center mb-12 sm:mb-14">
@@ -123,7 +129,16 @@ export default function Home() {
           </div>
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6" variant="slide-up" staggerDelay={0.08}>
             {coreServices.map(service => (
-              <ServiceCard key={service.id} service={service} />
+              <AnimatedServiceCard
+                key={service.id}
+                slug={service.id}
+                name={service.name}
+                tagline={service.tagline}
+                color={service.accentColor}
+                route={`/solutions/${service.slug}`}
+                status={service.status}
+                iconName={service.icon}
+              />
             ))}
           </StaggerContainer>
 
@@ -139,11 +154,26 @@ export default function Home() {
           {/* Hub Services */}
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6" variant="slide-up" staggerDelay={0.08}>
             {hubServices.map(service => (
-              <ServiceCard key={service.id} service={service} />
+              <AnimatedServiceCard
+                key={service.id}
+                slug={service.id}
+                name={service.name}
+                tagline={service.tagline}
+                color={service.accentColor}
+                route={`/solutions/${service.slug}`}
+                status={service.status}
+                iconName={service.icon}
+              />
             ))}
           </StaggerContainer>
         </div>
       </section>
+
+      {/* BATCH-4 TASK-2: Value Case */}
+      <ValueCaseSection />
+
+      {/* BATCH-4 TASK-3: Scalability Roadmap */}
+      <ScalabilitySection />
 
       {/* AI Callout Section */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-y border-[#1E2738]/40" role="region" aria-label="AI capabilities">
