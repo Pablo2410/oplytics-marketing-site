@@ -104,7 +104,7 @@ export const services: ServiceConfig[] = [
     icon: 'LayoutGrid',
     accentColor: '#1DB8CE',
     category: 'core',
-    demoImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663031899852/TqfjMS5mXpLDBG5ze8gzfz/demo-sqdcp-9ZfUnEfV9W4Nit7Y6epdho.webp',
+    demoImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310419663031899852/TqfjMS5mXpLDBG5ze8gzfz/sqdcp-dashboard-real_bcc775e0.png',
     problem: 'Physical whiteboards are static, illegible from a distance, and impossible to aggregate across sites. Tier meetings rely on outdated data, actions get lost on sticky notes, and management has no visibility into daily performance without walking the floor.',
     howItWorks: [
       { step: 1, title: 'Configure Your Boards', description: 'Set up digital SQDCP boards for each team, cell, or value stream. Define metrics, targets, and escalation rules.' },
