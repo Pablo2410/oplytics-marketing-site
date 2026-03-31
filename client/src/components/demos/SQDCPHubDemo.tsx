@@ -1,11 +1,12 @@
 /**
  * SQDCP Dashboard Demo — Real screenshot from sqdcp.oplytics.digital
+ * CDN URL migrated from manuscdn.com session file (PR #58) to permanent CloudFront.
  */
 export default function SQDCPHubDemo() {
   return (
     <div className="w-full">
       <img
-        src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663031899852/KrztKyLzJbeuhpNg.webp"
+        src="https://d2xsxph8kpxj0f.cloudfront.net/310419663031899852/TqfjMS5mXpLDBG5ze8gzfz/sqdcp-dashboard-real_bcc775e0.png"
         alt="SQDCP Dashboard — Vita Group, Vita Mattress Middleton — real data"
         className="w-full h-auto block"
         loading="lazy"
